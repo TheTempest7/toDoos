@@ -14,19 +14,23 @@ const [listOfItems,setlistOfItems]=useState([
     {text:'Сходить',key:4},
 ]);
 
+const [fromStore,setFromStore]=useState();
+
 
 useEffect(()=>{
   const storeData= async ()=>{
-    try{
+    try{/* await AsyncStorage.setItem('listOfItems',JSON.stringify(listOfItems));*/
       const str= await AsyncStorage.getItem('listOfItems');
-      console.log(str);
+      console.log(JSON.parse(str));
     
       if(str===null){
-        await AsyncStorage.setItem('listOfItems',JSON.stringify(listOfItems))
-        console.log('empty');
+        await AsyncStorage.setItem('listOfItems',JSON.stringify(listOfItems));
+        setFromStore(listOfItems)
+        /*console.log('empty');*/
       }
       else{
-        console.log('not empty');
+        /*console.log('not empty');*/
+        setFromStore(JSON.parse(str));
       }
     }
     catch(er){
@@ -35,25 +39,54 @@ useEffect(()=>{
     }
     
     storeData();
+
 },[])
 
 
-const addItem=(text)=>{
+const addItem=async (text)=>{
     if(text){
-        setlistOfItems((list)=>{
+      try{
+        let str= await AsyncStorage.getItem('listOfItems');
+        str=JSON.parse(str);
+        str.unshift({text:text,key:Math.random().toString(36).substring(7)});
+        await AsyncStorage.setItem('listOfItems',JSON.stringify(str));
+        setFromStore(str);
+      }
+      catch(er){
+        console.log(er);
+      }
+      
+        /*setlistOfItems((list)=>{
             return  [{text:text,key:Math.random().toString(36).substring(7)},
             ...list]
-        })
+        })*/
         
     }
 
 }
-console.log(listOfItems);
-const deleteItem=(el)=>{
+
+
+
+const deleteItem=async (el)=>{
   if(el.key){
-    setlistOfItems(listOfItems.filter(item=>
+    try{
+      let str= await AsyncStorage.getItem('listOfItems');
+      str=JSON.parse(str);
+      console.log(str);
+      console.log(el);
+      let str2=str.filter(item=> item.key!==el.key);
+      console.log(str2);
+      await AsyncStorage.setItem('listOfItems',JSON.stringify(str2));
+      setFromStore(str2);
+
+      
+    }
+    catch(er){
+      console.log(er);
+    }
+    /*setlistOfItems(listOfItems.filter(item=>
       item.key!==el.key
-    ))
+    ))*/
   }
 }
 
@@ -61,7 +94,7 @@ const deleteItem=(el)=>{
   return (
     <View style={styles.container}>
         <Creater addItem={addItem}/>
-        <FlatList data={listOfItems} renderItem={({item})=>(
+        <FlatList data={fromStore}  renderItem={({item})=>(
             <Item deleteItem={deleteItem} nav={navigation} el={item} />
         )}/>
     </View>

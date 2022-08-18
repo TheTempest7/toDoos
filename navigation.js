@@ -11,11 +11,11 @@ export default function Navigate(){
         <Stack.Navigator>
             <Stack.Screen name="Main"
             component={Main}
-            options={{title:'Главная',headerShown:'false'}}
+            options={{headerShown:false,title:'Главная',}}
             />
             <Stack.Screen name="About"
             component={About}
-            options={{title:'About'}}
+            options={({route})=>({title:route.params.text,headerStyle:{backgroundColor:'blue'},headerTintColor:'#fff'})}
             />
 
         </Stack.Navigator>

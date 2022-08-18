@@ -24,7 +24,6 @@ const Send=()=>{
   return (
     <View style={styles.container}>
         <View>
-        <Text>He</Text>
         <TextInput ref={inputer} style={styles.inputer} onChangeText={Changer} placeholder={'Водите что нибудь'}/>
         </View>
         <TouchableOpacity style={styles.button} onPress={Send}><Text>Применить</Text></TouchableOpacity>

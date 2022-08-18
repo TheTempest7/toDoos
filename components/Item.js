@@ -8,23 +8,27 @@ import { Ionicons } from '@expo/vector-icons';
 export default function Item(props) {
 
     const openUP=()=>{
-        console.log(props.nav.navigate('About',props.el));
+        props.nav.navigate('About',props.el);
     }
     const fg=()=>{
         props.deleteItem(props.el);
-        console.log(2);
+        console.log(props.el);
     }
     const done=(e)=>{
         console.log(e.target.style.pointerEvents);
         e.target.style.pointerEvents='none';
         e.target.style.opacity='0.5'
     }
+   
 
   return (
     <TouchableHighlight onPress={fg} onLongPress={done} style={styles.container}>
         <View style={styles.parentView}>
-            <Text>{props.el.text}</Text>
-            <Ionicons onPress={openUP} name="add-circle" size={36} color="black" />
+            <Text style={styles.text}>{props.el.text}</Text>
+            <View style={styles.icon}>
+                <Ionicons onPress={openUP} name="add-circle" size={36} color="black"  />
+            </View>
+            
         </View>
 
     </TouchableHighlight>
@@ -34,6 +38,8 @@ export default function Item(props) {
 const styles = StyleSheet.create({
     container: {
     flex: 1,
+    display:'flex',
+    flexDirection:'row',
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
@@ -46,5 +52,13 @@ const styles = StyleSheet.create({
         display:'flex',
         flexDirection:'row',
         alignItems:'center',
+    },
+    icon:{
+        display:'flex',
+        flexDirection:'row',
     }
-});
+    ,text:{
+        flexGrow: '1',
+        marginLeft: '20px',
+    }
+})
